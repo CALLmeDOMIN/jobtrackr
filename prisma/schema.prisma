@@ -19,20 +19,20 @@ model User {
 }
 
 model JobApplication {
-  id             String      @id @default(auto()) @map("_id") @db.ObjectId
-  companyName    String
-  position       String
-  status         String
-  dateApplied    DateTime
-  user           User        @relation(fields: [userId], references: [id])
-  userId         String      @db.ObjectId
-  jobDescription String
-  resume         String
-  coverLetter    String?
-  createdAt      DateTime    @default(now())
-  updatedAt      DateTime    @updatedAt
-  Interviews     Interview[]
-  Offers         Offer[]
+  id          String      @id @default(auto()) @map("_id") @db.ObjectId
+  status      String
+  dateApplied DateTime
+  user        User        @relation(fields: [userId], references: [id])
+  userId      String      @db.ObjectId
+  resume      String
+  coverLetter String?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  Interviews  Interview[]
+  Company     Company?    @relation(fields: [companyId], references: [id])
+  companyId   String?     @db.ObjectId
+  Offer       Offer?      @relation(fields: [offerId], references: [id])
+  offerId     String?     @db.ObjectId
 }
 
 model Interview {
@@ -48,27 +48,28 @@ model Interview {
 }
 
 model Offer {
-  id             String         @id @default(auto()) @map("_id") @db.ObjectId
-  jobApplication JobApplication @relation(fields: [applicationId], references: [id])
-  applicationId  String         @db.ObjectId
+  id             String           @id @default(auto()) @map("_id") @db.ObjectId
   offerDate      DateTime
   position       String
+  jobDescription String
   salary         Int
   benefits       String[]
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  jobApplication JobApplication[]
 }
 
 model Company {
-  id            String   @id @default(auto()) @map("_id") @db.ObjectId
-  name          String
-  industry      String
-  location      String
-  website       String
-  contactPerson String
-  notes         Note[]
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id             String           @id @default(auto()) @map("_id") @db.ObjectId
+  name           String
+  industry       String
+  location       String
+  website        String
+  contactPerson  String
+  notes          Note[]
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  JobApplication JobApplication[]
 }
 
 model Note {
