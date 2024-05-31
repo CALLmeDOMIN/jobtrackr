@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "./ui/card";
-import { company, offer } from "@/lib/data";
+import { companyData, offerData } from "@/lib/data";
 
 const Interview = (interview: Interview) => {
   const calculateTime = (interviewDate: Date) => {
@@ -31,8 +31,8 @@ const Interview = (interview: Interview) => {
     <Card>
       <CardHeader className="flex flex-row justify-between space-y-0">
         <div className="space-y-2">
-          <CardTitle>{company.name}</CardTitle>
-          <CardDescription>{offer.position}</CardDescription>
+          <CardTitle>{companyData.name}</CardTitle>
+          <CardDescription>{offerData.position}</CardDescription>
         </div>
         <div className="w-12 h-12 rounded-md bg-white"></div>
       </CardHeader>
@@ -40,7 +40,7 @@ const Interview = (interview: Interview) => {
         <p>{calculateTime(interview.interviewDate)}</p>
         <p>{interview.interviewType}</p>
         <p>{interview.interviewer}</p>
-        <p className="underline">{company.website}</p>
+        <p className="underline">{companyData.website}</p>
       </CardContent>
     </Card>
   );

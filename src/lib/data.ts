@@ -2,7 +2,7 @@
 
 import { Company, Interview, JobApplication, Offer } from "@prisma/client";
 
-export const offer: Offer = {
+export const offerData: Offer = {
   id: "1",
   position: "Software Engineer",
   jobDescription: "Software Engineer at Google",
@@ -13,7 +13,7 @@ export const offer: Offer = {
   updatedAt: new Date(),
 };
 
-export const company: Company = {
+export const companyData: Company = {
   id: "1",
   name: "Google",
   contactPerson: "John Doe",
@@ -24,7 +24,7 @@ export const company: Company = {
   updatedAt: new Date(),
 };
 
-export const jobApplication: JobApplication = {
+export const jobApplicationData: JobApplication = {
   id: "1",
   status: "Offer",
   dateApplied: new Date(),
@@ -37,7 +37,7 @@ export const jobApplication: JobApplication = {
   offerId: "1",
 };
 
-export const interview: Interview = {
+export const interviewData: Interview = {
   id: "1",
   applicationId: "1",
   interviewDate: new Date("2024-06-01 08:00:00"),
