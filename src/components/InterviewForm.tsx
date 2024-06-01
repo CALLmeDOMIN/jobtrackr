@@ -3,6 +3,7 @@
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -21,18 +22,30 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Check, ChevronsUpDown } from "lucide-react";
+import { companyData, jobApplicationData } from "@/lib/data";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "./ui/command";
+import { useState } from "react";
 
 const formSchema = z.object({
-  companyName: z.string(),
-  position: z.string(),
   interviewer: z.string(),
   interviewDate: z.date(),
   interviewType: z.string(),
+  application: z.string(),
   offerLink: z.string(),
 });
 
 const InterviewForm = () => {
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState("");
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
@@ -41,36 +54,19 @@ const InterviewForm = () => {
     console.log(values);
   };
 
+  const applications = jobApplicationData.map((application) => ({
+    label:
+      companyData.find((company) => company.id === application.companyId)
+        ?.name +
+      " " +
+      application.position,
+    value: application.id,
+  }));
+
   return (
     <div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          <FormField
-            control={form.control}
-            name="companyName"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Company Name</FormLabel>
-                <FormControl>
-                  <Input placeholder="Company Name" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="position"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Position</FormLabel>
-                <FormControl>
-                  <Input placeholder="Position" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
           <FormField
             control={form.control}
             name="interviewer"
@@ -80,6 +76,71 @@ const InterviewForm = () => {
                 <FormControl>
                   <Input placeholder="Interviewer" {...field} />
                 </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="application"
+            render={({ field }) => (
+              <FormItem className="flex-col flex">
+                <FormLabel>Link Application</FormLabel>
+                <Popover open={open} onOpenChange={setOpen}>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant="outline"
+                        role="combobox"
+                        aria-expanded={open}
+                        className="w-fit justify-between"
+                      >
+                        {value
+                          ? applications.find(
+                              (application) => application.value === value
+                            )?.label
+                          : "Select application..."}
+                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-[200px] p-0">
+                    <Command>
+                      <CommandInput placeholder="Search application..." />
+                      <CommandEmpty>No application found.</CommandEmpty>
+                      <CommandList>
+                        <CommandGroup>
+                          {applications.map((application) => (
+                            <CommandItem
+                              key={application.value}
+                              value={application.value}
+                              onSelect={(currentValue) => {
+                                form.setValue(
+                                  "application",
+                                  currentValue === value ? "" : currentValue
+                                );
+                                setValue(
+                                  currentValue === value ? "" : currentValue
+                                );
+                                setOpen(false);
+                              }}
+                            >
+                              <Check
+                                className={cn(
+                                  "mr-2 h-4 w-4",
+                                  value === application.value
+                                    ? "opacity-100"
+                                    : "opacity-0"
+                                )}
+                              />
+                              {application.label}
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
                 <FormMessage />
               </FormItem>
             )}
@@ -115,9 +176,10 @@ const InterviewForm = () => {
                       selected={field.value}
                       onSelect={field.onChange}
                       disabled={(date) =>
-                        date > new Date() || date < new Date("1900-01-01")
+                        date < new Date() || date < new Date("1900-01-01")
                       }
                       initialFocus
+                      className="flex items-center justify-center"
                     />
                   </PopoverContent>
                 </Popover>
