@@ -11,12 +11,12 @@ import { interviewData } from "@/lib/data";
 import { Plus } from "lucide-react";
 import InterviewForm from "@/components/InterviewForm";
 
-export default function Home() {
+const Interviews = () => {
   return (
     <main className="p-4">
       <section>
-        <div className="flex items-center justify-between">
-          <h1 className="text-4xl font-bold mb-2">Upcoming Interviews</h1>
+        <div className="flex items-center gap-2 mb-2">
+          <h1 className="text-4xl font-bold">Upcoming Interviews</h1>
           <Dialog>
             <DialogTrigger asChild>
               <Button className="p-2">
@@ -31,7 +31,7 @@ export default function Home() {
             </DialogContent>
           </Dialog>
         </div>
-        <div className="p-2 space-y-2">
+        <div className="p-2 space-y-2 md:max-w-[70%]">
           {interviewData.map((interview) => (
             <Interview key={interview.id} {...interview} />
           ))}
@@ -39,4 +39,6 @@ export default function Home() {
       </section>
     </main>
   );
-}
+};
+
+export default Interviews;

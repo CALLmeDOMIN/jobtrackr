@@ -16,8 +16,8 @@ import React from "react";
 const Applications = () => {
   return (
     <main className="p-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-4xl font-bold mb-2">Your job applications</h1>
+      <div className="flex items-center gap-2 mb-2">
+        <h1 className="text-4xl font-bold">Your job applications</h1>
         <Dialog>
           <DialogTrigger asChild>
             <Button className="p-2">

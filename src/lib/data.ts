@@ -36,8 +36,8 @@ export const companyData: Company[] = [
   },
   {
     id: "3",
-    name: "Apple",
-    contactPerson: "Steve Jobs",
+    name: "Microsoft",
+    contactPerson: "Bill Gates",
     industry: "Tech",
     location: "Cupertino, CA",
     website: "https://apple.com",
