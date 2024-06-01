@@ -33,9 +33,9 @@ const Applications = () => {
         </Dialog>
       </div>
       <div className="p-2 flex flex-col md:grid md:grid-cols-3 gap-3">
-        {Array.from({ length: 3 }, (_, i) => (
-          <Link key={i} href={`/applications/${jobApplicationData.id}`}>
-            <JobApplication {...jobApplicationData} />
+        {jobApplicationData.map((application) => (
+          <Link key={application.id} href={`/applications/${application.id}`}>
+            <JobApplication {...application} />
           </Link>
         ))}
       </div>

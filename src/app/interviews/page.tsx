@@ -32,8 +32,8 @@ export default function Home() {
           </Dialog>
         </div>
         <div className="p-2 space-y-2">
-          {Array.from({ length: 3 }, (_, i) => (
-            <Interview key={i} {...interviewData} />
+          {interviewData.map((interview) => (
+            <Interview key={interview.id} {...interview} />
           ))}
         </div>
       </section>
