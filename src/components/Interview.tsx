@@ -1,4 +1,4 @@
-import { type Interview } from "@prisma/client";
+import { type Interview as InterviewType } from "@prisma/client";
 import {
   Card,
   CardContent,
@@ -8,7 +8,7 @@ import {
 } from "./ui/card";
 import { companyData, offerData } from "@/lib/data";
 
-const Interview = (interview: Interview) => {
+const Interview = (interview: InterviewType) => {
   const calculateTime = (interviewDate: Date) => {
     const now = new Date();
     const diffInMilliseconds = Math.abs(

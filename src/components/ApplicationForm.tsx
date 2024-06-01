@@ -3,7 +3,6 @@
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -27,13 +26,11 @@ import { CalendarIcon } from "lucide-react";
 const formSchema = z.object({
   companyName: z.string(),
   position: z.string(),
-  interviewer: z.string(),
-  interviewDate: z.date(),
-  interviewType: z.string(),
-  offerLink: z.string(),
+  status: z.string(),
+  dateApplied: z.date(),
 });
 
-const AddInterviewForm = () => {
+const ApplicationForm = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
@@ -53,9 +50,8 @@ const AddInterviewForm = () => {
               <FormItem>
                 <FormLabel>Company Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="Company Name" {...field} />
+                  <Input placeholder="Google" {...field} />
                 </FormControl>
-                <FormDescription>Enter the company name</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -67,33 +63,18 @@ const AddInterviewForm = () => {
               <FormItem>
                 <FormLabel>Position</FormLabel>
                 <FormControl>
-                  <Input placeholder="Position" {...field} />
+                  <Input placeholder="Software Engineer" {...field} />
                 </FormControl>
-                <FormDescription>Enter the position</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
           />
           <FormField
             control={form.control}
-            name="interviewer"
+            name="dateApplied"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Interviewer</FormLabel>
-                <FormControl>
-                  <Input placeholder="Interviewer" {...field} />
-                </FormControl>
-                <FormDescription>Enter the interviewer</FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="interviewDate"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Interview Date</FormLabel>
+                <FormLabel>Date Applied</FormLabel>
                 <Popover>
                   <PopoverTrigger asChild>
                     <FormControl>
@@ -125,35 +106,19 @@ const AddInterviewForm = () => {
                     />
                   </PopoverContent>
                 </Popover>
-                <FormDescription>Enter the interview date</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
           />
           <FormField
             control={form.control}
-            name="interviewType"
+            name="status"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Interview Type</FormLabel>
+                <FormLabel>Application Status</FormLabel>
                 <FormControl>
-                  <Input placeholder="Interview Type" {...field} />
+                  <Input placeholder="Sent" {...field} />
                 </FormControl>
-                <FormDescription>Enter the interview type</FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="offerLink"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Offer Link</FormLabel>
-                <FormControl>
-                  <Input placeholder="Offer Link" {...field} />
-                </FormControl>
-                <FormDescription>Enter the offer link</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -165,4 +130,4 @@ const AddInterviewForm = () => {
   );
 };
 
-export default AddInterviewForm;
+export default ApplicationForm;
