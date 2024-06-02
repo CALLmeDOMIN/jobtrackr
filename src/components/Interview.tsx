@@ -6,7 +6,6 @@ import {
   CardHeader,
   CardTitle,
 } from "./ui/card";
-import { companyData, jobApplicationData } from "@/lib/data";
 import {
   Contact,
   DotIcon,
@@ -16,34 +15,29 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import prisma from "@/lib/prisma";
 
-interface LoadDataResult {
-  application: (typeof jobApplicationData)[0] | null;
-  company: (typeof companyData)[0] | null;
-  error: boolean;
-}
+const Interview = async (interview: InterviewType) => {
+  const application = await prisma.jobApplication.findFirst({
+    where: {
+      id: interview.applicationId,
+    },
+  });
 
-const loadData = (applicationId: string): LoadDataResult => {
-  const application = jobApplicationData.find(
-    (application) => application.id === applicationId
-  );
+  const { name, website } = (await prisma.company.findFirst({
+    where: {
+      id: application?.companyId,
+    },
+    select: {
+      name: true,
+      website: true,
+    },
+  })) || { name: "", website: "" };
 
-  if (!application) {
-    return { application: null, company: null, error: true };
+  if (!application || !name) {
+    return null;
   }
 
-  const company = companyData.find(
-    (company) => company.id === application.companyId
-  );
-
-  if (!company) {
-    return { application, company: null, error: true };
-  }
-
-  return { application, company, error: false };
-};
-
-const Interview = (interview: InterviewType) => {
   const calculateTime = (interviewDate: Date) => {
     const now = new Date();
     const diffInMilliseconds = Math.abs(
@@ -62,29 +56,19 @@ const Interview = (interview: InterviewType) => {
     }
   };
 
-  const { company, application, error } = loadData(interview.applicationId);
-
-  if (error) {
-    return <div>Interview not found</div>;
-  }
-
-  if (!company || !application) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <Card>
       <CardHeader className="flex flex-row justify-between space-y-0">
         <div className="space-y-2">
-          <CardTitle>{company.name}</CardTitle>
+          <CardTitle>{name}</CardTitle>
           <CardDescription>{application.position}</CardDescription>
         </div>
         <div className="rounded-md w-12 h-12 bg-white overflow-hidden">
           <Image
-            src={`/logos/${company.name.toLowerCase()}.png`}
+            src={`/logos/${name.toLowerCase()}.png`}
             width={1000}
             height={1000}
-            alt={`${company.name} logo`}
+            alt={`${name} logo`}
             className="object-cover"
           />
         </div>
@@ -105,8 +89,13 @@ const Interview = (interview: InterviewType) => {
           </p>
           <p className="flex gap-2">
             <LinkIcon className="text-background bg-white rounded-md" />
-            <Link href={company.website} className="underline flex gap-2">
-              {company.website}
+            <Link
+              href={`https://${website}`}
+              className="underline flex gap-2"
+              rel="noreferrer noopener"
+              target="_blank"
+            >
+              https://{website}
             </Link>
           </p>
         </div>

@@ -23,7 +23,6 @@ import { z } from "zod";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { CalendarIcon, Check, ChevronsUpDown } from "lucide-react";
-import { companyData, jobApplicationData } from "@/lib/data";
 import {
   Command,
   CommandEmpty,
@@ -33,6 +32,7 @@ import {
   CommandList,
 } from "./ui/command";
 import { useState } from "react";
+import { type JobApplication } from "@prisma/client";
 
 const formSchema = z.object({
   interviewer: z.string(),
@@ -42,7 +42,12 @@ const formSchema = z.object({
   offerLink: z.string(),
 });
 
-const InterviewForm = () => {
+type Application = {
+  value: string;
+  label: string;
+};
+
+const InterviewForm = ({ applications }: { applications: Application[] }) => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
 
@@ -53,15 +58,6 @@ const InterviewForm = () => {
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     console.log(values);
   };
-
-  const applications = jobApplicationData.map((application) => ({
-    label:
-      companyData.find((company) => company.id === application.companyId)
-        ?.name +
-      " " +
-      application.position,
-    value: application.id,
-  }));
 
   return (
     <div>

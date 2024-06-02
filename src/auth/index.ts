@@ -56,7 +56,7 @@ const authOptions: NextAuthConfig = {
             image: user.profilePic,
           };
 
-          return isValid ? (userWithoutSensitiveFields as User) : null;
+          return isValid ? userWithoutSensitiveFields : null;
         } catch (error) {
           console.error(error);
           return null;
@@ -68,6 +68,23 @@ const authOptions: NextAuthConfig = {
   ],
   basePath: BASE_PATH,
   secret: process.env.AUTH_SECRET,
+  session: {
+    strategy: "jwt",
+  },
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.id = token.id as string;
+      }
+      return session;
+    },
+  },
 };
 
 export const { handlers, signIn, signOut, auth } = NextAuth(authOptions);

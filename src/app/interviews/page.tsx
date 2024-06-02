@@ -7,11 +7,55 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import Interview from "@/components/Interview";
-import { interviewData } from "@/lib/data";
 import { Plus } from "lucide-react";
 import InterviewForm from "@/components/InterviewForm";
+import prisma from "@/lib/prisma";
+import { auth } from "@/auth";
 
-const Interviews = () => {
+const Interviews = async () => {
+  const session = await auth();
+
+  if (!session || !session.user || !session.user.id) {
+    return null;
+  }
+
+  const interviews = await prisma.interview.findMany({
+    where: {
+      jobApplication: {
+        user: {
+          id: session.user.id,
+        },
+      },
+    },
+    orderBy: {
+      interviewDate: "asc",
+    },
+  });
+
+  const applications = await prisma.jobApplication
+    .findMany({
+      where: {
+        user: {
+          id: session.user.id,
+        },
+      },
+      select: {
+        id: true,
+        Company: {
+          select: {
+            name: true,
+          },
+        },
+        position: true,
+      },
+    })
+    .then((applications) =>
+      applications.map((application) => ({
+        value: application.id,
+        label: `${application.Company.name} - ${application.position}`,
+      }))
+    );
+
   return (
     <main className="p-4">
       <section>
@@ -27,12 +71,12 @@ const Interviews = () => {
               <DialogHeader>
                 <DialogTitle>Add Interview</DialogTitle>
               </DialogHeader>
-              <InterviewForm />
+              <InterviewForm applications={applications} />
             </DialogContent>
           </Dialog>
         </div>
         <div className="p-2 space-y-2 md:max-w-[70%]">
-          {interviewData.map((interview) => (
+          {interviews.map((interview) => (
             <Interview key={interview.id} {...interview} />
           ))}
         </div>

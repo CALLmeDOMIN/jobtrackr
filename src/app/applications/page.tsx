@@ -8,12 +8,27 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import ApplicationForm from "@/components/ApplicationForm";
-import { jobApplicationData } from "@/lib/data";
 import { Plus } from "lucide-react";
 import Link from "next/link";
 import React from "react";
+import prisma from "@/lib/prisma";
+import { auth } from "@/auth";
 
-const Applications = () => {
+const Applications = async () => {
+  const session = await auth();
+
+  if (!session || !session.user || !session.user.id) {
+    return null;
+  }
+
+  const applications = await prisma.jobApplication.findMany({
+    where: {
+      user: {
+        id: session.user.id,
+      },
+    },
+  });
+
   return (
     <main className="p-4">
       <div className="flex items-center gap-2 mb-2">
@@ -33,7 +48,7 @@ const Applications = () => {
         </Dialog>
       </div>
       <div className="p-2 flex flex-col md:grid md:grid-cols-3 gap-3">
-        {jobApplicationData.map((application) => (
+        {applications.map((application) => (
           <Link key={application.id} href={`/applications/${application.id}`}>
             <JobApplication {...application} />
           </Link>
