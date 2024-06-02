@@ -4,6 +4,7 @@ import "./globals.css";
 
 import { cn } from "@/lib/utils";
 import Nav from "@/components/Nav";
+import { SessionProvider } from "next-auth/react";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -28,8 +29,10 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
-        <Nav />
-        {children}
+        <SessionProvider>
+          <Nav />
+          {children}
+        </SessionProvider>
       </body>
     </html>
   );

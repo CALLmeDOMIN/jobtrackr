@@ -1,13 +1,10 @@
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Menu } from "lucide-react";
 import Link from "next/link";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
-import { auth } from "@/auth";
 import AuthButton from "./auth/AuthButton.server";
+import AvatarComponent from "./AvatarComponent";
 
-const Nav = async () => {
-  const session = await auth();
-
+const Nav = () => {
   return (
     <div className="flex justify-between p-4 items-center">
       <Link href={"/"}>
@@ -21,14 +18,7 @@ const Nav = async () => {
         <Link href={"/interviews"}>Interviews</Link>
         <Link href={"/applications"}>Applications</Link>
         <Link href={"/profile"}>
-          {session?.user?.image ? (
-            <Avatar>
-              <AvatarImage src={session?.user?.image} />
-              <AvatarFallback>{session?.user?.name}</AvatarFallback>
-            </Avatar>
-          ) : (
-            <p> Hello, {session?.user?.name} </p>
-          )}
+          <AvatarComponent />
         </Link>
         <AuthButton />
       </div>

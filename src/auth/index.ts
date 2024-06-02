@@ -1,43 +1,68 @@
 import NextAuth, { User, NextAuthConfig } from "next-auth";
-import Github from "next-auth/providers/github";
+import GithubProvider from "next-auth/providers/github";
 import Credentials from "next-auth/providers/credentials";
+import prisma from "@/lib/prisma";
+import { compare } from "bcryptjs";
+import { type User as PrismaUser } from "@prisma/client";
+import { connectToDatabase } from "./helpers";
 
 export const BASE_PATH = "/api/auth";
 
+interface Credentials {
+  username: string;
+  password: string;
+}
+
 const authOptions: NextAuthConfig = {
   providers: [
-    Github,
+    GithubProvider({
+      clientId: process.env.AUTH_GITHUB_ID!,
+      clientSecret: process.env.AUTH_GITHUB_SECRET!,
+    }),
     Credentials({
       name: "Credentials",
       credentials: {
-        username: { label: "Username", type: "text", placeholder: "jsmith" },
-        password: { label: "Password", type: "password" },
+        username: {
+          label: "Username",
+          placeholder: "Enter your username",
+        },
+        password: {
+          label: "Password",
+          placeholder: "Password",
+        },
       },
-      async authorize(credentials): Promise<User | null> {
-        const users = [
-          {
-            id: "1",
-            name: "admin",
-            email: "admin@admin.com",
-            username: "admin",
-            password: "admin",
-          },
-          {
-            id: "2",
-            name: "user",
-            email: "user@user.com",
-            username: "user",
-            password: "user",
-          },
-        ];
-        const user = users.find(
-          (user) =>
-            user.username === credentials.username &&
-            user.password === credentials.password
-        );
-        return user
-          ? { id: user.id, name: user.name, email: user.email }
-          : null;
+      async authorize(credentials) {
+        if (!credentials || !credentials.username || !credentials.password)
+          return null;
+
+        await connectToDatabase();
+
+        try {
+          const user = await prisma.user.findFirst({
+            where: {
+              username: credentials.username,
+            },
+          });
+
+          if (!user?.password) return null;
+
+          // @ts-ignore
+          const isValid = await compare(credentials.password, user.password);
+
+          const userWithoutSensitiveFields = {
+            id: user.id,
+            name: user.username,
+            email: user.email,
+            image: user.profilePic,
+          };
+
+          return isValid ? (userWithoutSensitiveFields as User) : null;
+        } catch (error) {
+          console.error(error);
+          return null;
+        } finally {
+          await prisma.$disconnect();
+        }
       },
     }),
   ],
