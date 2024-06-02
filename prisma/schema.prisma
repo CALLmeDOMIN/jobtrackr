@@ -40,7 +40,7 @@ model Interview {
   applicationId  String         @db.ObjectId
   interviewDate  DateTime
   interviewer    String
-  feedback       String
+  feedback       String?
   interviewType  String
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt

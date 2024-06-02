@@ -3,7 +3,6 @@
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -32,14 +31,13 @@ import {
   CommandList,
 } from "./ui/command";
 import { useState } from "react";
-import { type JobApplication } from "@prisma/client";
 
 const formSchema = z.object({
   interviewer: z.string(),
   interviewDate: z.date(),
   interviewType: z.string(),
   application: z.string(),
-  offerLink: z.string(),
+  offerLink: z.string().optional(),
 });
 
 type Application = {
@@ -55,8 +53,25 @@ const InterviewForm = ({ applications }: { applications: Application[] }) => {
     resolver: zodResolver(formSchema),
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values);
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    try {
+      const response = await fetch("/api/interviews", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log("Interview created successfully", result);
+      } else {
+        console.error("Failed to create interview");
+      }
+    } catch (error) {
+      console.error("An error occurred", error);
+    }
   };
 
   return (
@@ -209,7 +224,16 @@ const InterviewForm = ({ applications }: { applications: Application[] }) => {
               </FormItem>
             )}
           />
-          <Button type="submit">Submit</Button>
+          <Button
+            type="submit"
+            disabled={!form.formState.isValid || form.formState.isSubmitting}
+            onClick={() => {
+              setTimeout(() => {}, 1000);
+              setOpen(false);
+            }}
+          >
+            Submit
+          </Button>
         </form>
       </Form>
     </div>
