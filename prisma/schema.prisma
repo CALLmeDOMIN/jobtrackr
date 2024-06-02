@@ -30,6 +30,7 @@ model JobApplication {
   Interviews  Interview[]
   Company     Company     @relation(fields: [companyId], references: [id])
   companyId   String      @db.ObjectId
+  Notes       Note[]
   Offer       Offer?      @relation(fields: [offerId], references: [id])
   offerId     String?     @db.ObjectId
 }
@@ -55,7 +56,7 @@ model Offer {
   benefits       String[]
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
-  jobApplication JobApplication[]
+  JobApplication JobApplication[]
 }
 
 model Company {
@@ -72,13 +73,12 @@ model Company {
 }
 
 model Note {
-  id            String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId        String
-  applicationId String
-  noteText      String
-  date          DateTime
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  company       Company? @relation(fields: [companyId], references: [id])
-  companyId     String?  @db.ObjectId
+  id             String         @id @default(auto()) @map("_id") @db.ObjectId
+  note           String
+  companyId      String?        @db.ObjectId
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  company        Company?       @relation(fields: [companyId], references: [id])
+  jobApplication JobApplication @relation(fields: [applicationId], references: [id])
+  applicationId  String         @db.ObjectId
 }
