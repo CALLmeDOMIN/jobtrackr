@@ -22,6 +22,7 @@ import { z } from "zod";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
+import { useSession } from "next-auth/react";
 
 const formSchema = z.object({
   companyName: z.string(),
@@ -31,12 +32,24 @@ const formSchema = z.object({
 });
 
 const ApplicationForm = () => {
+  const session = useSession();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
 
+  if (!session || !session.data) {
+    return null;
+  }
+
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values);
+    const newValues = { userId: session.data.user?.id, ...values };
+
+    try {
+      console.log(values);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (

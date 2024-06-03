@@ -71,7 +71,7 @@ const Interviews = async () => {
               <DialogHeader>
                 <DialogTitle>Add Interview</DialogTitle>
               </DialogHeader>
-              <InterviewForm applications={applications} />
+              <InterviewForm single={false} applications={applications} />
             </DialogContent>
           </Dialog>
         </div>

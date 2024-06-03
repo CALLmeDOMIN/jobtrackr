@@ -40,12 +40,24 @@ const formSchema = z.object({
   offerLink: z.string().optional(),
 });
 
+type singleProps = {
+  single: true;
+  applicationId: string;
+};
+
+type multipleProps = {
+  single: false;
+  applications: Application[];
+};
+
+type Props = singleProps | multipleProps;
+
 type Application = {
   value: string;
   label: string;
 };
 
-const InterviewForm = ({ applications }: { applications: Application[] }) => {
+const InterviewForm = (props: Props) => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
 
@@ -55,7 +67,7 @@ const InterviewForm = ({ applications }: { applications: Application[] }) => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      const response = await fetch("/api/interviews", {
+      const res = await fetch("/api/interviews", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -63,9 +75,9 @@ const InterviewForm = ({ applications }: { applications: Application[] }) => {
         body: JSON.stringify(values),
       });
 
-      if (response.ok) {
-        const result = await response.json();
-        console.log("Interview created successfully", result);
+      if (res.ok) {
+        const data = await res.json();
+        console.log("Interview created successfully", data);
       } else {
         console.error("Failed to create interview");
       }
@@ -91,7 +103,7 @@ const InterviewForm = ({ applications }: { applications: Application[] }) => {
               </FormItem>
             )}
           />
-          <FormField
+          {/* <FormField
             control={form.control}
             name="application"
             render={({ field }) => (
@@ -155,7 +167,7 @@ const InterviewForm = ({ applications }: { applications: Application[] }) => {
                 <FormMessage />
               </FormItem>
             )}
-          />
+          /> */}
           <FormField
             control={form.control}
             name="interviewDate"
