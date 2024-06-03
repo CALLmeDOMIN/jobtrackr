@@ -1,6 +1,6 @@
 import { Menu } from "lucide-react";
 import Link from "next/link";
-import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
+import { Sheet, SheetClose, SheetContent, SheetTrigger } from "./ui/sheet";
 import AuthButton from "./auth/AuthButton.server";
 import AvatarComponent from "./AvatarComponent";
 
@@ -30,8 +30,12 @@ const Nav = () => {
         </SheetTrigger>
         <SheetContent>
           <div className="flex flex-col items-center space-y-4 pt-10">
-            <Link href={"/interviews"}>Interviews</Link>
-            <Link href={"/applications"}>Applications</Link>
+            <SheetClose asChild>
+              <Link href={"/interviews"}>Interviews</Link>
+            </SheetClose>
+            <SheetClose asChild>
+              <Link href={"/applications"}>Applications</Link>
+            </SheetClose>
           </div>
         </SheetContent>
       </Sheet>
