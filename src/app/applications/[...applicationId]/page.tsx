@@ -3,15 +3,18 @@ import NotesForm from "@/components/NotesForm";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import prisma from "@/lib/prisma";
-import { Plus } from "lucide-react";
+import { Minus, Plus } from "lucide-react";
 import React from "react";
+import DeleteInterview from "./DeleteInterview";
 
 const SingleApplication = async ({
   params,
@@ -70,11 +73,12 @@ const SingleApplication = async ({
           variant={"outline"}
           disabled
           className={
-            "cursor-default uppercase " + application.status === "Rejected"
+            "cursor-default uppercase " +
+            (application.status === "Rejected"
               ? "bg-red-400/30 border-red-400 text-red-400"
               : application.status === "Applied"
               ? "bg-green-400/30 border-green-400 text-green-400"
-              : "bg-blue-400/30 border-blue-400 text-blue-400"
+              : "bg-blue-400/30 border-blue-400 text-blue-400")
           }
         >
           {application.status}
@@ -96,7 +100,7 @@ const SingleApplication = async ({
                 <DialogHeader>
                   <DialogTitle>Add Interview</DialogTitle>
                 </DialogHeader>
-                <InterviewForm single applicationId={applicationId} />
+                {/* <InterviewForm single applicationId={applicationId} /> */}
               </DialogContent>
             </Dialog>
           </div>
@@ -108,9 +112,30 @@ const SingleApplication = async ({
                   <li>
                     <div className="flex gap-3 items-center my-2 justify-between px-2">
                       <p>{interview.interviewDate.toLocaleString()}</p>
-                      <Button className="cursor-default" variant={"outline"}>
-                        {interview.interviewType}
-                      </Button>
+                      <div className="space-x-2 flex items-center">
+                        <Button className="cursor-default" variant={"outline"}>
+                          {interview.interviewType}
+                        </Button>
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <Button variant="destructive" className="p-3">
+                              <Minus size={12} />
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent>
+                            <DialogHeader>
+                              <DialogTitle>
+                                Are you sure you want to remove this interview?
+                              </DialogTitle>
+                            </DialogHeader>
+                            <DialogFooter>
+                              <DialogClose asChild>
+                                <DeleteInterview interviewId={interview.id} />
+                              </DialogClose>
+                            </DialogFooter>
+                          </DialogContent>
+                        </Dialog>
+                      </div>
                     </div>
                   </li>
                 </React.Fragment>
@@ -167,12 +192,26 @@ const SingleApplication = async ({
           {offer ? (
             <div>
               <Separator />
-              <p>Offered: {offer.offerDate.toLocaleString()}</p>
-              <p>Base Salary: {offer.salary}</p>
-              <p>Description: {offer.jobDescription}</p>
-              {offer.benefits.map((benefit) => (
-                <p key={benefit}>{benefit}</p>
-              ))}
+              <div className="p-4 space-y-2">
+                <div>
+                  <h2 className="text-lg font-bold">Offered:</h2>
+                  <p>{offer.offerDate.toLocaleString()}</p>
+                </div>
+                <div>
+                  <h2 className="text-lg font-bold">Base Salary:</h2>
+                  <p>{offer.salary}</p>
+                </div>
+                <div>
+                  <h2 className="text-lg font-bold">Description:</h2>
+                  <p>{offer.jobDescription}</p>
+                </div>
+                <div>
+                  <h2 className="text-lg font-bold">Benefits:</h2>
+                  {offer.benefits.map((benefit) => (
+                    <p key={benefit}>{benefit}</p>
+                  ))}
+                </div>
+              </div>
               <Separator />
             </div>
           ) : (
