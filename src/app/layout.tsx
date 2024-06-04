@@ -5,6 +5,7 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import Nav from "@/components/Nav";
 import { SessionProvider } from "next-auth/react";
+import { Toaster } from "@/components/ui/toaster";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -32,6 +33,7 @@ export default function RootLayout({
         <SessionProvider>
           <Nav />
           {children}
+          <Toaster />
         </SessionProvider>
       </body>
     </html>

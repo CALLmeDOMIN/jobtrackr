@@ -31,6 +31,7 @@ import {
   CommandList,
 } from "./ui/command";
 import { useState } from "react";
+import { useToast } from "./ui/use-toast";
 
 const formSchema = z.object({
   interviewer: z.string(),
@@ -40,17 +41,19 @@ const formSchema = z.object({
   offerLink: z.string().optional(),
 });
 
-type singleProps = {
-  single: true;
-  applicationId: string;
-};
+// type singleProps = {
+//   single: true;
+//   applicationId: string;
+// };
 
 type multipleProps = {
   single: false;
   applications: Application[];
 };
 
-type Props = singleProps | multipleProps;
+// type Props = singleProps | multipleProps;
+
+type Props = multipleProps;
 
 type Application = {
   value: string;
@@ -58,6 +61,8 @@ type Application = {
 };
 
 const InterviewForm = (props: Props) => {
+  const { toast } = useToast();
+
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
 
@@ -76,12 +81,25 @@ const InterviewForm = (props: Props) => {
       });
 
       if (res.ok) {
-        const data = await res.json();
-        console.log("Interview created successfully", data);
+        toast({
+          title: "Success",
+          description: "Interview created successfully",
+          variant: "default",
+        });
       } else {
+        toast({
+          title: "Error",
+          description: "Failed to create interview",
+          variant: "destructive",
+        });
         console.error("Failed to create interview");
       }
     } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to create interview",
+        variant: "destructive",
+      });
       console.error("An error occurred", error);
     }
   };
@@ -103,7 +121,7 @@ const InterviewForm = (props: Props) => {
               </FormItem>
             )}
           />
-          {/* <FormField
+          <FormField
             control={form.control}
             name="application"
             render={({ field }) => (
@@ -119,7 +137,7 @@ const InterviewForm = (props: Props) => {
                         className="w-fit justify-between"
                       >
                         {value
-                          ? applications.find(
+                          ? props.applications.find(
                               (application) => application.value === value
                             )?.label
                           : "Select application..."}
@@ -133,7 +151,7 @@ const InterviewForm = (props: Props) => {
                       <CommandEmpty>No application found.</CommandEmpty>
                       <CommandList>
                         <CommandGroup>
-                          {applications.map((application) => (
+                          {props.applications.map((application) => (
                             <CommandItem
                               key={application.value}
                               value={application.value}
@@ -167,7 +185,7 @@ const InterviewForm = (props: Props) => {
                 <FormMessage />
               </FormItem>
             )}
-          /> */}
+          />
           <FormField
             control={form.control}
             name="interviewDate"
@@ -239,10 +257,6 @@ const InterviewForm = (props: Props) => {
           <Button
             type="submit"
             disabled={!form.formState.isValid || form.formState.isSubmitting}
-            onClick={() => {
-              setTimeout(() => {}, 1000);
-              setOpen(false);
-            }}
           >
             Submit
           </Button>

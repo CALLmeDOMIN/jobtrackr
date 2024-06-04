@@ -13,12 +13,15 @@ import {
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { useToast } from "./ui/use-toast";
 
 const formSchema = z.object({
   note: z.string(),
 });
 
 const NotesForm = ({ applicationId }: { applicationId: string }) => {
+  const { toast } = useToast();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
@@ -36,12 +39,25 @@ const NotesForm = ({ applicationId }: { applicationId: string }) => {
       });
 
       if (res.ok) {
-        const data = await res.json();
-        console.log("Note created successfully", data);
+        toast({
+          title: "Success",
+          description: "Interview created successfully",
+          variant: "default",
+        });
       } else {
-        console.error("Failed to create note");
+        toast({
+          title: "Error",
+          description: "Failed to create interview",
+          variant: "destructive",
+        });
+        console.error("Failed to create interview");
       }
     } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to create interview",
+        variant: "destructive",
+      });
       console.error("An error occurred", error);
     }
   };
