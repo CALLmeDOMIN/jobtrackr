@@ -1,5 +1,5 @@
 import InterviewForm from "@/components/InterviewForm";
-import NotesForm from "@/components/NotesForm";
+import NotesForm from "@/components/forms/notes/NotesForm";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
