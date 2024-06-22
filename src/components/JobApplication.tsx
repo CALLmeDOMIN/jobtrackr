@@ -14,13 +14,13 @@ const JobApplication = async (application: JobApplicationType) => {
   })) || { name: "" };
 
   return (
-    <Card className="hover:scale-[1.025] transition-all">
+    <Card className="transition-all hover:scale-[1.025]">
       <CardHeader className="flex flex-row justify-between space-y-0">
         <div className="space-y-2">
           <CardTitle>{name}</CardTitle>
           <CardDescription>{application.position}</CardDescription>
         </div>
-        <div className="rounded-md w-12 h-12 bg-white overflow-hidden">
+        <div className="h-12 w-12 overflow-hidden rounded-md bg-white">
           <Image
             src={`/logos/${name.toLowerCase()}.png`}
             width={1000}

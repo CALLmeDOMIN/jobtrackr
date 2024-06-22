@@ -53,13 +53,13 @@ const Interviews = async () => {
       applications.map((application) => ({
         value: application.id,
         label: `${application.Company.name} - ${application.position}`,
-      }))
+      })),
     );
 
   return (
     <main className="p-4">
       <section>
-        <div className="flex items-center gap-2 mb-2">
+        <div className="mb-2 flex items-center gap-2">
           <h1 className="text-4xl font-bold">Upcoming Interviews</h1>
           <Dialog>
             <DialogTrigger asChild>
@@ -75,7 +75,7 @@ const Interviews = async () => {
             </DialogContent>
           </Dialog>
         </div>
-        <div className="p-2 space-y-2 md:max-w-[70%]">
+        <div className="space-y-2 p-2 md:max-w-[70%]">
           {interviews.map((interview) => (
             <Interview key={interview.id} {...interview} />
           ))}

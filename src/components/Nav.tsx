@@ -6,7 +6,7 @@ import AvatarComponent from "./AvatarComponent";
 
 const Nav = () => {
   return (
-    <div className="flex justify-between p-4 items-center">
+    <div className="flex items-center justify-between p-4">
       <Link href={"/"}>
         <h1 className="font-bold">
           Job
@@ -14,7 +14,7 @@ const Nav = () => {
           rackr
         </h1>
       </Link>
-      <div className="md:flex items-center space-x-4 hidden">
+      <div className="hidden items-center space-x-4 md:flex">
         <Link href={"/interviews"}>Interviews</Link>
         <Link href={"/applications"}>Applications</Link>
         <Link href={"/profile"}>

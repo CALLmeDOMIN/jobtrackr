@@ -31,7 +31,7 @@ const Applications = async () => {
 
   return (
     <main className="p-4">
-      <div className="flex items-center gap-2 mb-2">
+      <div className="mb-2 flex items-center gap-2">
         <h1 className="text-4xl font-bold">Your job applications</h1>
         <Dialog>
           <DialogTrigger asChild>
@@ -47,7 +47,7 @@ const Applications = async () => {
           </DialogContent>
         </Dialog>
       </div>
-      <div className="p-2 flex flex-col md:grid md:grid-cols-3 gap-3">
+      <div className="flex flex-col gap-3 p-2 md:grid md:grid-cols-3">
         {applications.map((application) => (
           <Link key={application.id} href={`/applications/${application.id}`}>
             <JobApplication {...application} />

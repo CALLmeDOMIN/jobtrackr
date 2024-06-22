@@ -125,7 +125,7 @@ const InterviewForm = (props: Props) => {
             control={form.control}
             name="application"
             render={({ field }) => (
-              <FormItem className="flex-col flex">
+              <FormItem className="flex flex-col">
                 <FormLabel>Link Application</FormLabel>
                 <Popover open={open} onOpenChange={setOpen}>
                   <PopoverTrigger asChild>
@@ -138,7 +138,7 @@ const InterviewForm = (props: Props) => {
                       >
                         {value
                           ? props.applications.find(
-                              (application) => application.value === value
+                              (application) => application.value === value,
                             )?.label
                           : "Select application..."}
                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -158,10 +158,10 @@ const InterviewForm = (props: Props) => {
                               onSelect={(currentValue) => {
                                 form.setValue(
                                   "application",
-                                  currentValue === value ? "" : currentValue
+                                  currentValue === value ? "" : currentValue,
                                 );
                                 setValue(
-                                  currentValue === value ? "" : currentValue
+                                  currentValue === value ? "" : currentValue,
                                 );
                                 setOpen(false);
                               }}
@@ -171,7 +171,7 @@ const InterviewForm = (props: Props) => {
                                   "mr-2 h-4 w-4",
                                   value === application.value
                                     ? "opacity-100"
-                                    : "opacity-0"
+                                    : "opacity-0",
                                 )}
                               />
                               {application.label}
@@ -199,7 +199,7 @@ const InterviewForm = (props: Props) => {
                         variant={"outline"}
                         className={cn(
                           "w-full pl-3 text-left font-normal",
-                          !field.value && "text-muted-foreground"
+                          !field.value && "text-muted-foreground",
                         )}
                       >
                         {field.value ? (

@@ -66,7 +66,7 @@ const SingleApplication = async ({
   }
 
   return (
-    <main className="max-w-screen-xl m-auto p-4">
+    <main className="m-auto max-w-screen-xl p-4">
       <div className="flex items-center gap-4">
         <h1 className="text-2xl font-bold">Company: {company.name}</h1>
         <Button
@@ -75,10 +75,10 @@ const SingleApplication = async ({
           className={
             "cursor-default uppercase " +
             (application.status === "Rejected"
-              ? "bg-red-400/30 border-red-400 text-red-400"
+              ? "border-red-400 bg-red-400/30 text-red-400"
               : application.status === "Applied"
-              ? "bg-green-400/30 border-green-400 text-green-400"
-              : "bg-blue-400/30 border-blue-400 text-blue-400")
+                ? "border-green-400 bg-green-400/30 text-green-400"
+                : "border-blue-400 bg-blue-400/30 text-blue-400")
           }
         >
           {application.status}
@@ -88,11 +88,11 @@ const SingleApplication = async ({
 
       <div className="md:grid md:grid-cols-2 md:gap-10">
         <div>
-          <div className="flex gap-2 items-center mt-8">
+          <div className="mt-8 flex items-center gap-2">
             <h2 className="text-xl">Interviews</h2>
             <Dialog>
               <DialogTrigger asChild>
-                <Button className="p-1 h-5">
+                <Button className="h-5 p-1">
                   <Plus size={12} />
                 </Button>
               </DialogTrigger>
@@ -110,9 +110,9 @@ const SingleApplication = async ({
                 <React.Fragment key={interview.id}>
                   <Separator />
                   <li>
-                    <div className="flex gap-3 items-center my-2 justify-between px-2">
+                    <div className="my-2 flex items-center justify-between gap-3 px-2">
                       <p>{interview.interviewDate.toLocaleString()}</p>
-                      <div className="space-x-2 flex items-center">
+                      <div className="flex items-center space-x-2">
                         <Button className="cursor-default" variant={"outline"}>
                           {interview.interviewType}
                         </Button>
@@ -145,16 +145,16 @@ const SingleApplication = async ({
           ) : (
             <>
               <Separator />
-              <p className="text-center mt-2 ">No interviews</p>
+              <p className="mt-2 text-center">No interviews</p>
             </>
           )}
         </div>
         <div>
-          <div className="flex gap-2 items-center mt-8">
+          <div className="mt-8 flex items-center gap-2">
             <h2 className="text-xl">Notes</h2>
             <Dialog>
               <DialogTrigger asChild>
-                <Button className="p-1 h-5">
+                <Button className="h-5 p-1">
                   <Plus size={12} />
                 </Button>
               </DialogTrigger>
@@ -172,7 +172,7 @@ const SingleApplication = async ({
                 <React.Fragment key={note.id}>
                   <Separator />
                   <li>
-                    <div className="flex gap-3 items-center my-2 justify-between px-2">
+                    <div className="my-2 flex items-center justify-between gap-3 px-2">
                       <p>{note.note}</p>
                     </div>
                   </li>
@@ -183,16 +183,16 @@ const SingleApplication = async ({
           ) : (
             <>
               <Separator />
-              <p className="text-center mt-2 ">No notes</p>
+              <p className="mt-2 text-center">No notes</p>
             </>
           )}
         </div>
         <div className="md:col-span-2">
-          <h2 className="text-xl mt-4">Offer Details</h2>
+          <h2 className="mt-4 text-xl">Offer Details</h2>
           {offer ? (
             <div>
               <Separator />
-              <div className="p-4 space-y-2">
+              <div className="space-y-2 p-4">
                 <div>
                   <h2 className="text-lg font-bold">Offered:</h2>
                   <p>{offer.offerDate.toLocaleString()}</p>
@@ -217,7 +217,7 @@ const SingleApplication = async ({
           ) : (
             <>
               <Separator />
-              <p className="text-center mt-2 ">No offer provided</p>
+              <p className="mt-2 text-center">No offer provided</p>
             </>
           )}
         </div>

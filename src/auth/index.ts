@@ -1,9 +1,8 @@
-import NextAuth, { User, NextAuthConfig } from "next-auth";
+import NextAuth, { NextAuthConfig } from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 import Credentials from "next-auth/providers/credentials";
 import prisma from "@/lib/prisma";
 import { compare } from "bcryptjs";
-import { type User as PrismaUser } from "@prisma/client";
 import { connectToDatabase } from "./helpers";
 
 export const BASE_PATH = "/api/auth";

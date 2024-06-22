@@ -41,7 +41,7 @@ const Interview = async (interview: InterviewType) => {
   const calculateTime = (interviewDate: Date) => {
     const now = new Date();
     const diffInMilliseconds = Math.abs(
-      now.getTime() - interviewDate.getTime()
+      now.getTime() - interviewDate.getTime(),
     );
     const diffInMinutes = Math.floor(diffInMilliseconds / 60000);
     const diffInHours = Math.floor(diffInMilliseconds / 3600000);
@@ -63,7 +63,7 @@ const Interview = async (interview: InterviewType) => {
           <CardTitle>{name}</CardTitle>
           <CardDescription>{application.position}</CardDescription>
         </div>
-        <div className="rounded-md w-12 h-12 bg-white overflow-hidden">
+        <div className="h-12 w-12 overflow-hidden rounded-md bg-white">
           <Image
             src={`/logos/${name.toLowerCase()}.png`}
             width={1000}
@@ -76,22 +76,22 @@ const Interview = async (interview: InterviewType) => {
       <CardContent className="flex justify-between">
         <div className="space-y-2">
           <p className="flex gap-2">
-            <Timer className="text-background bg-white rounded-md" />
+            <Timer className="rounded-md bg-white text-background" />
             {calculateTime(interview.interviewDate)}
           </p>
           <p className="flex gap-2">
-            <DotIcon className="text-background bg-white rounded-md" />
+            <DotIcon className="rounded-md bg-white text-background" />
             {interview.interviewType}
           </p>
           <p className="flex gap-2">
-            <Contact className="text-background bg-white rounded-md" />
+            <Contact className="rounded-md bg-white text-background" />
             {interview.interviewer}
           </p>
           <p className="flex gap-2">
-            <LinkIcon className="text-background bg-white rounded-md" />
+            <LinkIcon className="rounded-md bg-white text-background" />
             <Link
               href={`https://${website}`}
-              className="underline flex gap-2"
+              className="flex gap-2 underline"
               rel="noreferrer noopener"
               target="_blank"
             >
