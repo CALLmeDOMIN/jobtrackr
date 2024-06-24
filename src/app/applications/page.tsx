@@ -7,7 +7,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import ApplicationForm from "@/components/ApplicationForm";
+import ApplicationForm from "@/components/forms/applications/ApplicationForm";
 import { Plus } from "lucide-react";
 import Link from "next/link";
 import React from "react";

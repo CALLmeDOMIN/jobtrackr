@@ -23,39 +23,83 @@ import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
-
-const formSchema = z.object({
-  companyName: z.string(),
-  position: z.string(),
-  status: z.string(),
-  dateApplied: z.date(),
-});
+import { applicationSchema } from "./applicationSchema";
+import { useEffect, useRef } from "react";
+import { useFormState } from "react-dom";
+import { onSubmitAction } from "./applicationSubmit";
+import { toast, useToast } from "@/components/ui/use-toast";
 
 const ApplicationForm = () => {
   const session = useSession();
+  const { toast } = useToast();
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const formRef = useRef<HTMLFormElement>(null);
+
+  const [state, formAction] = useFormState(onSubmitAction, {
+    status: "idle",
+    message: "",
   });
+
+  const form = useForm<z.output<typeof applicationSchema>>({
+    resolver: zodResolver(applicationSchema),
+    defaultValues: {
+      companyName: "",
+      position: "",
+      status: "",
+      dateApplied: new Date(),
+      ...(state?.fields ?? {}),
+    },
+  });
+
+  useEffect(() => {
+    if (state.status === "submitted") {
+      toast({
+        title: "Success",
+        description: "Application created successfully",
+        variant: "default",
+      });
+    } else if (state.status === "error") {
+      toast({
+        title: "Error",
+        description: "Failed to create application",
+        variant: "destructive",
+      });
+    }
+  }, [state.status, toast]);
 
   if (!session || !session.data) {
     return null;
   }
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    const newValues = { userId: session.data.user?.id, ...values };
-
-    try {
-      console.log(values);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   return (
     <div>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        {state?.issues && (
+          <div className="text-red-500">
+            <ul>
+              {state.issues.map((issue) => (
+                <li key={issue} className="flex gap-1">
+                  {issue}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+        <form
+          className="space-y-4"
+          action={formAction}
+          ref={formRef}
+          onSubmit={(evt) => {
+            evt.preventDefault();
+            form.handleSubmit(() => {
+              const formData = new FormData(formRef.current!);
+              formData.append("userId", session.data.user?.id as string);
+
+              state.status = "submitting";
+              formAction(formData);
+            })(evt);
+          }}
+        >
           <FormField
             control={form.control}
             name="companyName"

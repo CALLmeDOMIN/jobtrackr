@@ -1,7 +1,7 @@
 "use server";
 
 import { connectToDatabase } from "@/auth/helpers";
-import { notesSchema } from "./notesSchema";
+import { applicationSchema } from "./applicationSchema";
 import prisma from "@/lib/prisma";
 
 export type FormState = {
@@ -16,7 +16,7 @@ export const onSubmitAction = async (
   data: FormData,
 ): Promise<FormState> => {
   const formData = Object.fromEntries(data);
-  const parsed = notesSchema.safeParse(formData);
+  const parsed = applicationSchema.safeParse(formData);
 
   if (!parsed.success) {
     const fields: Record<string, string> = {};
@@ -26,16 +26,16 @@ export const onSubmitAction = async (
 
     return {
       status: "error",
-      message: "Error: Invalid note",
+      message: "Error: Invalid application",
       fields,
       issues: parsed.error.issues.map((issue) => issue.message),
     };
   }
 
   try {
-    const { note, applicationId } = formData;
+    const { companyName, position, status, dateApplied, userId } = formData;
 
-    if (!note || !applicationId) {
+    if (!companyName || !position || !status || !dateApplied || !userId) {
       return {
         status: "error",
         message: "Error: Invalid data",
@@ -44,16 +44,40 @@ export const onSubmitAction = async (
 
     await connectToDatabase();
 
-    const newNote = await prisma.note.create({
+    let companyId = await prisma.company
+      .findMany({
+        where: {
+          name: companyName.toString(),
+        },
+        select: {
+          id: true,
+        },
+      })
+      .then((companies) => companies[0]?.id);
+
+    if (!companyId) {
+      companyId = await prisma.company
+        .create({
+          data: {
+            name: companyName.toString(),
+          },
+        })
+        .then((company) => company.id);
+    }
+
+    await prisma.jobApplication.create({
       data: {
-        note: note.toString(),
-        applicationId: applicationId.toString(),
+        companyId: companyId,
+        position: position.toString(),
+        status: status.toString(),
+        dateApplied: new Date(dateApplied.toString()),
+        userId: userId.toString(),
       },
     });
 
     return {
       status: "submitted",
-      message: `Note: ${formData.note}`,
+      message: `Application created`,
     };
   } catch (error) {
     return {

@@ -14,8 +14,8 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { useToast } from "../../ui/use-toast";
-import { notesSchema } from "./notesSchema";
-import { onSubmitAction } from "./notesSubmit";
+import { noteSchema } from "./noteSchema";
+import { onSubmitAction } from "./noteSubmit";
 import { useFormState } from "react-dom";
 import { Loader2 } from "lucide-react";
 import { useEffect, useRef } from "react";
@@ -30,8 +30,8 @@ const NotesForm = ({ applicationId }: { applicationId: string }) => {
     message: "",
   });
 
-  const form = useForm<z.output<typeof notesSchema>>({
-    resolver: zodResolver(notesSchema),
+  const form = useForm<z.output<typeof noteSchema>>({
+    resolver: zodResolver(noteSchema),
     defaultValues: {
       note: "",
       ...(state?.fields ?? {}),

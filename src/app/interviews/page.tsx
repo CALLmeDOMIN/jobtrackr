@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/dialog";
 import Interview from "@/components/Interview";
 import { Plus } from "lucide-react";
-import InterviewForm from "@/components/InterviewForm";
+import InterviewForm from "@/components/forms/interviews/InterviewForm";
 import prisma from "@/lib/prisma";
 import { auth } from "@/auth";
 
